@@ -94,7 +94,7 @@
 <body>
     <header>
         <img src="Logo.png" alt="Team Imperials Logo" class="team-logo3">
-        <h1>How We Helped You</h1>
+        <h1>Share Your Solutions</h1>
         
         <!-- <div class="logo-container">
             <div class="logo-details">
@@ -112,11 +112,21 @@
             <label for="author">Your Email:</label>
             <input type="text" id="author" placeholder="Enter your email" required>
 
-            <label for="author">Product:</label>
-            <input type="text" id="author" placeholder="Enter product name" required>
+            <div class="review-container">
 
-            <label for="story">Experience:</label>
-            <textarea id="story" name="story" rows="9" placeholder="Share your experience here..." required></textarea>
+                <label for="author">Rate Us:</label>
+                <div class="stars" id="star-container">
+                    <span data-value="1" class="star">&#9733;</span>
+                    <span data-value="2" class="star">&#9733;</span>
+                    <span data-value="3" class="star">&#9733;</span>
+                    <span data-value="4" class="star">&#9733;</span>
+                    <span data-value="5" class="star">&#9733;</span>
+                </div>
+                
+            </div>
+
+            <label for="story">Comment:</label>
+            <textarea id="story" name="story" rows="9" placeholder="Leave your comment here..." required></textarea>
 
             <button type="submit">Submit</button>
         </form>
@@ -125,6 +135,7 @@
         &copy; 2024 Food Adulteration Awareness
     </footer>
 </body>
+<script src="script.js"></script>
 </html>
 
 
