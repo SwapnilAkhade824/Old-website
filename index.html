@@ -88,6 +88,16 @@
       font-family: 'Poppins', sans-serif;
       text-align: center;
     }
+    .popup .options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .popup .options button {
+      padding: 10px 20px;
+      margin-bottom: 1.5rem;
+    }
     .popup .comments {
       background: #ffe8e1;
       padding: 15px;
@@ -108,7 +118,7 @@
       border-radius: 5px;
       cursor: pointer;
     }
-    .comments button:hover {
+    .comments button:hover{
       background-color: #4f2d6d;
       transition: 0.3s;
     }
@@ -116,16 +126,16 @@
       width: 80%;
       height: 150px;
       padding: 10px;
-      font-size: 12px;
-      font-family: Arial, sans-serif;
+      font-size: 12px; /* Default font size */
+      font-family: Arial, sans-serif; /* Default font */
       border: 1px solid #ccc;
       border-radius: 5px;
     }
     textarea::placeholder {
-      font-family: 'Poppins', sans-serif;
-      font-size: 14px;
-      color: #888;
-      opacity: 1;
+      font-family: 'Poppins',sans-serif; /* Change to any font you prefer */
+      font-size: 14px; /* Font size */
+      color: #888; /* Change placeholder text color */
+      opacity: 1; /* Ensure placeholder is visible */
     }
     footer {
       text-align: center;
@@ -148,35 +158,49 @@
       </div>
     </div>
   </header>
-  <div class="menu-container">
-    <button class="menu-button" onclick="toggleMenu()">☰ Menu</button>
-    <div class="dropdown-menu" id="dropdownMenu">
-      <li><a href="helped_you.html">How we Helped You</a></li>
-      <li><a href="share_stories.html">Share Your Stories for Food Adulteration</a></li>
-      <li><a href="about_us.html">About Us</a></li>
+    <!-- Hamburger Menu as a Button -->
+    <div class="menu-container">
+        <button class="menu-button" onclick="toggleMenu()">☰ Menu</button>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <li><a href="helped_you.html">How we Helped You</a></li>
+          <li><a href="share_stories.html">Share Your Stories for Food Adulteration</a></li>
+          <li><a href="share_solution.html">Share Your Solution</a></li>
+          <li><a href="reviews.html">Reviews</a></li>
+          <li><a href="about_us.html">About US</a></li>
+        </div>
     </div>
-  </div>
   <main>
     <input type="text" id="foodInput" placeholder="Enter food name, e.g., Milk, Sugar, Salt" onkeydown="triggerSearch(event)">
-    <button onclick="showFoodDetails()">Search</button>
+    <button onclick="showMethodChoice()">Search</button>
   </main>
 
   <div class="overlay" onclick="closePopup()"></div>
 
+  <div class="popup" id="methodChoicePopup">
+    <div class="content">
+      <h3>Choose the Method</h3>
+      <div class="options">
+        <button onclick="showFeasibleMethod()">Feasible Method</button>
+        <button onclick="showChemicalMethod()">Chemical Method</button>
+      </div>
+    </div>
+  </div>
+
   <div class="popup" id="resultPopup">
     <div class="content">
-      <h3 id="methodTitle">Food Adulteration Detection Steps</h3>
+      <h3 id="methodTitle">Method</h3>
       <p id="methodSteps">Loading...</p>
     </div>
     <div class="comments">
       <h4>Comments</h4>
-      <textarea id="commentInput" placeholder="Add your comment..." rows="3"></textarea>
+      <textarea type='text' id="commentInput" placeholder="Add your comment..." rows="3"></textarea>
       <button onclick="submitComment()">Submit</button>
       <div id="commentsList">
         <p>No comments yet.</p>
       </div>
     </div>
   </div>
+  
 
   <footer>
     <p>&copy; 2024 Team Imperials. All rights reserved.</p>
@@ -185,20 +209,64 @@
 <script>
   var foodData = {
     milk: {
-      steps: "<b>Feasible Method:</b> 1) Boil milk to check for water addition.<br>2) Observe burnt smell indicating synthetic milk.<br><b>Chemical Method:</b> 1) Add iodine to test for starch.<br>2) Burn cotton dipped in milk; synthetic milk smells like plastic.",
+      feasible: `1.Add a drop of milk on a polished vertical surface and observe if it flows down without leaving a trail (pure) or leaves a white trail (adulterated).<br>
+2.Smell the milk; a soapy or detergent-like smell indicates detergent adulteration.<br>
+3.Rub a small amount of milk between fingers; smooth texture (pure) or slippery texture (adulterated with synthetic milk).<br>
+`,
+      chemical: `1.Mix equal parts of milk and water, shake well, and add a few drops of iodine solution; blue color indicates starch adulteration.<br>
+2.Add a few drops of hydrochloric acid and observe for bubbles or effervescence, indicating washing powder adulteration.<br>
+3.Boil a small amount of milk; pure milk leaves a thick, solid residue, while adulterated milk with synthetic substances leaves a thin layer.<br>
+4.Add 5 ml of milk to 5 ml of sulfuric acid carefully without shaking; a violet ring at the interface indicates formalin adulteration.<br>`,
       comments: []
     },
     sugar: {
-      steps: "<b>Feasible Method:</b> 1) Dissolve in water to detect chalk powder sedimentation.<br>2) Inspect residue for impurities.<br><b>Chemical Method:</b> 1) Add HCl, carbonate impurities release gas.<br>2) Look for effervescence.",
+      feasible: `1. Dissolve a small amount of sugar in water; pure sugar dissolves completely, while adulterated sugar (with chalk powder) leaves a residue.<br>
+2. Take a pinch of sugar and rub it between your fingers; pure sugar feels crystalline, while adulterated sugar (with washing soda) feels gritty or leaves a soapy texture.<br>
+`,
+      chemical: `1. Mix sugar with water and add a few drops of hydrochloric acid; effervescence indicates chalk powder adulteration.<br>
+2.  Dissolve sugar in water and add a few drops of iodine solution; blue color indicates the presence of starch.<br>
+3.  Heat a small sample of sugar in a spoon; pure sugar caramelizes, while adulterated sugar with washing soda produces a soapy smell or leaves a residue.<br>
+4.  Dissolve sugar in water and add lime juice; any residue or floating particles indicate adulteration.<br>`,
       comments: []
-    }
+    },
+    honey: {
+      feasible: `1.  Add a spoonful of honey to a glass of water; pure honey sinks to the bottom, while adulterated honey dissolves or mixes easily.<br>
+2.  Place a drop of honey on your thumb; pure honey stays intact, while adulterated honey spreads or feels watery.<br>
+3.  Dip a cotton wick in honey and try to light it; pure honey burns easily, while adulterated honey with water won't burn.<br>
+4.  Put a drop of honey on blotting paper; pure honey does not leave a water ring, while adulterated honey does.<br>
+`,
+      chemical: `1. Mix honey with water and add a few drops of vinegar; bubbling indicates adulteration with chalk powder.<br>
+2. Heat a small amount of honey in a spoon; pure honey thickens and caramelizes, while adulterated honey foams or produces bubbles.<br>
+3. Mix honey with water and add a few drops of iodine solution; blue color indicates starch adulteration.<br>
+4. Combine honey with lime water (calcium hydroxide solution); a white precipitate indicates adulteration with sugar or glucose.<br>`,
+      comments: []
+    },
+    "turmeric powder": {
+      feasible: `1. Take a pinch of turmeric powder and mix it with water; pure turmeric settles at the bottom, while adulterated turmeric (with chalk powder or lead chromate) leaves a colored residue in water.<br>
+2. Rub a small amount of turmeric powder between your fingers; pure turmeric feels powdery, while adulterated turmeric may feel gritty (presence of chalk powder).<br>
+`,
+      chemical: `1. Mix turmeric powder with water and add a few drops of concentrated hydrochloric acid; effervescence indicates the presence of chalk powder.<br>
+2. Add a pinch of turmeric powder to a test tube with alcohol; yellow color remains for pure turmeric, while adulterated turmeric may show reddish or other hues due to synthetic dyes.<br>
+3. Place a small amount of turmeric powder on blotting paper, add water, and check for color spread; pure turmeric does not spread its color, while synthetic dye spreads and stains the paper.<br>
+4. Mix turmeric powder with water, add a few drops of hydrochloric acid, and observe for a magenta color, indicating the presence of metanil yellow (a harmful dye).<br>`,
+      comments: []
+    },
+    "chilli powder": {
+      feasible: `1.  Water Test: Mix a small amount of chilli powder in water. Pure chilli powder will color the water uniformly, while adulterated powder (with brick powder or salt) will leave a residue.
+2.  Texture Test: Rub a small amount of chilli powder between your fingers. Pure chilli powder feels smooth, while adulterated powder may feel gritty or coarse (indicating the presence of starch or sand).
+3.  Heat Test: Heat a small quantity of chilli powder in a spoon. Pure chilli powder will darken without much residue, while adulterated powder (with artificial color) may leave a residue or smell.
+`,
+      chemical: `1.  Iodine Test: Add a few drops of iodine solution to a small amount of chilli powder mixed with water. If the solution turns blue, starch (often used as an adulterant) is present.
+2.  Ethanol Test: Mix a small quantity of chilli powder in alcohol; pure powder will dissolve, while adulterated powder (containing artificial color) will not dissolve properly and will leave a residue.
+3.  Lead Chromate Test: Mix a pinch of chilli powder with water and add a few drops of hydrochloric acid. A yellow color indicates the presence of lead chromate (a harmful dye used to adulterate chilli powder).`,
+      comments: []
+    },
   };
 
-  function showFoodDetails() {
+  function showMethodChoice() {
     var foodName = document.getElementById("foodInput").value.toLowerCase();
     if (foodData[foodName]) {
-      document.getElementById("methodSteps").innerHTML = foodData[foodName].steps;
-      document.getElementById("resultPopup").style.display = "block";
+      document.getElementById("methodChoicePopup").style.display = "block";
       document.querySelector(".overlay").style.display = "block";
     } else {
       alert("No data available for the entered food.");
@@ -210,9 +278,26 @@
     document.querySelector(".overlay").style.display = "none";
   }
 
+  function showFeasibleMethod() {
+    displayMethod("feasible", "Feasible Method");
+  }
+
+  function showChemicalMethod() {
+    displayMethod("chemical", "Chemical Method");
+  }
+
+  function displayMethod(methodType, methodTitle) {
+    var foodName = document.getElementById("foodInput").value.toLowerCase();
+    document.getElementById("methodTitle").innerText = methodTitle;
+    document.getElementById("methodSteps").innerHTML = foodData[foodName][methodType] || "No data available.";
+    closePopup();
+    document.getElementById("resultPopup").style.display = "block";
+    document.querySelector(".overlay").style.display = "block";
+  }
+
   function triggerSearch(event) {
     if (event.key === "Enter") {
-      showFoodDetails();
+      showMethodChoice();
     }
   }
 
@@ -230,11 +315,33 @@
   function displayComments(foodName) {
     var commentsList = document.getElementById("commentsList");
     var comments = foodData[foodName]?.comments || [];
-
+    
     commentsList.innerHTML = comments.length
       ? comments.map((c) => `<p>${c}</p>`).join("")
       : "<p>No comments yet.</p>";
   }
+
 </script>
+
+<script>
+  // Toggle the dropdown menu visibility when the button is clicked
+  document.querySelector('.menu-button').addEventListener('click', function(event) {
+    const dropdown = document.querySelector('.dropdown-menu');
+    dropdown.classList.toggle('show'); // Toggle the "show" class to show/hide the menu
+    event.stopPropagation(); // Prevent the click event from propagating to the document
+  });
+
+  // Close the dropdown if the user clicks outside of the menu
+  document.addEventListener('click', function(event) {
+    const dropdown = document.querySelector('.dropdown-menu');
+    const menuContainer = document.querySelector('.menu-button');
+    
+    // Check if the clicked area is outside the menu container and dropdown
+    if (!menuContainer.contains(event.target)) {
+      dropdown.classList.remove('show'); // Hide the dropdown
+    }
+  });
+</script>
+
 </body>
 </html>
