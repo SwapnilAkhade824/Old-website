@@ -24,7 +24,6 @@ body::before {
   z-index: -1;
 }
 
-
 /* Allow the main content to grow as needed */
 main {
   flex: 1;
